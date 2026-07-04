@@ -2,6 +2,7 @@ import { Building2, FileText, FolderTree, Users } from "lucide-react";
 import { useAuth } from "@/context/auth-context";
 import { useEpreuves, useFilieres, usePoles } from "@/hooks/queries";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Reveal, StaggerContainer, StaggerItem } from "@/components/motion";
 
 function StatCard({
   icon: Icon,
@@ -35,6 +36,7 @@ export function DashboardPage() {
 
   return (
     <div className="space-y-6">
+      <Reveal inView={false}>
       <div>
         <h1 className="text-2xl font-bold">Tableau de bord</h1>
         <p className="text-muted-foreground">
@@ -46,19 +48,28 @@ export function DashboardPage() {
               : ""}
         </p>
       </div>
+      </Reveal>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <StaggerContainer className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <StaggerItem>
         <StatCard icon={Building2} label="Pôles" value={poles?.length ?? 0} />
+        </StaggerItem>
+        <StaggerItem>
         <StatCard icon={FolderTree} label="Filières" value={filieres?.length ?? 0} />
+        </StaggerItem>
+        <StaggerItem>
         <StatCard
           icon={FileText}
           label="Épreuves"
           value={epreuves?.meta.total ?? 0}
         />
+        </StaggerItem>
         {isSuperAdmin && (
+          <StaggerItem>
           <StatCard icon={Users} label="Rôle" value="SuperAdmin" />
+          </StaggerItem>
         )}
-      </div>
+      </StaggerContainer>
     </div>
   );
 }

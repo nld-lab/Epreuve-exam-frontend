@@ -71,7 +71,7 @@ export function PolesAdminPage() {
                 <TableRow key={p.id}>
                   <TableCell className="font-medium">{p.nom}</TableCell>
                   <TableCell>
-                    <Badge variant="secondary">{p.pays}</Badge>
+                    <Badge variant="default">{p.pays}</Badge>
                   </TableCell>
                   <TableCell>{p._count?.epreuves ?? 0}</TableCell>
                   <TableCell>{p.admin?.nom ?? "—"}</TableCell>

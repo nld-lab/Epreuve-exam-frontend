@@ -4,6 +4,7 @@ import { useFilieres, usePoles } from "@/hooks/queries";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
+import { Reveal, StaggerContainer, StaggerItem } from "@/components/motion";
 
 export function PoleFilieresPage() {
   const { poleId } = useParams();
@@ -13,25 +14,31 @@ export function PoleFilieresPage() {
   const pole = poles?.find((p) => p.id === id);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 px-4 md:px-60 py-12">
+      <Reveal inView={false}>
       <Button asChild variant="ghost" size="sm">
         <Link to="/">
           <ArrowLeft className="size-4" />
           Retour aux pôles
         </Link>
       </Button>
+      </Reveal>
 
+      <Reveal inView={false} delay={0.08}>
       <div>
         <h1 className="text-2xl font-bold">{pole?.nom ?? "Pôle"}</h1>
         {pole && (
           <p className="text-muted-foreground">{pole.pays}</p>
         )}
       </div>
+      </Reveal>
 
+      <Reveal delay={0.12}>
       <h2 className="text-lg font-semibold flex items-center gap-2">
         <FolderTree className="size-5" />
         Filières
       </h2>
+      </Reveal>
 
       {isLoading ? (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -40,11 +47,12 @@ export function PoleFilieresPage() {
           ))}
         </div>
       ) : (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <StaggerContainer className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {filieres?.map((filiere) => (
+            <StaggerItem key={filiere.id}>
             <Link
-              key={filiere.id}
               to={`/epreuves?poleId=${id}&filiereId=${filiere.id}`}
+              className="block h-full"
             >
               <Card className="h-full transition-shadow hover:shadow-md">
                 <CardHeader>
@@ -56,11 +64,12 @@ export function PoleFilieresPage() {
                 </CardContent>
               </Card>
             </Link>
+            </StaggerItem>
           ))}
           {filieres?.length === 0 && (
             <p className="text-muted-foreground">Aucune filière disponible.</p>
           )}
-        </div>
+        </StaggerContainer>
       )}
     </div>
   );

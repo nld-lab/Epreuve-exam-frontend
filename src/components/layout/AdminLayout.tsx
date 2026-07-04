@@ -1,4 +1,5 @@
-import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
+import { Link, NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import {
   LayoutDashboard,
   FileText,
@@ -8,11 +9,14 @@ import {
   CalendarDays,
   LogOut,
   GraduationCap,
+  ArrowLeft,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/context/auth-context";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { PageTransition } from "@/components/motion";
+import { pageTransition } from "@/lib/motion";
 
 const baseNav = [
   { to: "/admin", label: "Tableau de bord", icon: LayoutDashboard, end: true },
@@ -29,6 +33,8 @@ const superAdminNav = [
 export function AdminLayout() {
   const { user, isSuperAdmin, logout } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  const reduceMotion = useReducedMotion();
 
   const navItems = isSuperAdmin ? [...baseNav, ...superAdminNav] : baseNav;
 
@@ -39,7 +45,13 @@ export function AdminLayout() {
 
   return (
     <div className="min-h-screen bg-muted/30 flex">
-      <aside className="hidden w-64 shrink-0 flex-col border-r bg-primary/30 md:flex">
+      <aside className="hidden w-64 shrink-0 flex-col border-r bg-foreground/10 md:flex">
+        <motion.div
+          initial={reduceMotion ? false : { x: -20, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={pageTransition}
+          className="flex h-full flex-col"
+        >
         <Link to="/">
         <div className="flex h-16 items-center gap-2 border-b px-6 font-semibold">
             <GraduationCap className="size-6" />
@@ -56,8 +68,8 @@ export function AdminLayout() {
                 cn(
                   "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors",
                   isActive
-                    ? "bg-primary text-primary-foreground"
-                    : "text-black hover:bg-secondary"
+                    ? "bg-primary text-primary-foreground dark:text-black"
+                    : "text-black dark:text-white hover:bg-secondary"
                 )
               }
             >
@@ -69,11 +81,12 @@ export function AdminLayout() {
         <div className="border-t p-3">
           <Link
             to="/"
-            className="block rounded-md px-3 py-2 text-sm text-muted-foreground hover:bg-secondary"
+            className=" rounded-md px-3 py-2 text-sm  hover:bg-secondary flex items-center"
           >
-            ← Retour au site public
+            <ArrowLeft className="size-4 mr-2" /> Retour au site public
           </Link>
         </div>
+        </motion.div>
       </aside>
 
       <div className="flex flex-1 flex-col">
@@ -81,20 +94,24 @@ export function AdminLayout() {
           <div className="text-sm text-muted-foreground">
             Connecté en tant que{" "}
             <span className="font-medium text-foreground">{user?.nom}</span>{" "}
-            <span className="rounded bg-secondary px-2 py-0.5 text-xs">
+            <span className="rounded bg-accent px-2 py-0.5 text-xs">
               {user?.role}
             </span>
           </div>
           <div className="flex items-center gap-2">
             <ThemeToggle />
-            <Button variant="outline" size="sm" onClick={handleLogout}>
+            <Button variant="destructive"  onClick={handleLogout}>
               <LogOut className="size-4" />
               Déconnexion
             </Button>
           </div>
         </header>
         <main className="flex-1 p-6">
-          <Outlet />
+          <AnimatePresence mode="wait">
+            <PageTransition key={location.pathname}>
+              <Outlet />
+            </PageTransition>
+          </AnimatePresence>
         </main>
       </div>
     </div>

@@ -1,11 +1,13 @@
 import { ArrowUpRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
+import { Reveal } from "@/components/motion";
 
 const CTA = () => {
   return (
-    <div className="px-0 py-16 sm:px-6">
-      <div className="mx-auto max-w-5xl border-y bg-muted/50 p-1 sm:rounded-xl sm:border-x">
-        <div className="sm:shadow/5 relative flex flex-col justify-between gap-0 overflow-hidden border bg-background px-10 sm:rounded-lg md:flex-row md:gap-8">
+    <Reveal direction="scale" className="px-0 py-16 sm:px-6">
+      <div className="mx-auto max-w-5xl w-full border-y bg-muted/50 p-1 sm:rounded-xl sm:border-x">
+        <div className="sm:shadow/5 relative flex flex-col items-center justify-between gap-4 overflow-hidden border bg-background px-10 md:py-4 sm:rounded-lg md:flex-row md:gap-8">
           {/* Circuit Board - Light Pattern */}
           <div
             className="max-sm:mask-b-from-75% pointer-events-none absolute inset-0 -top-0.5 -left-1 z-0 not-dark:opacity-60"
@@ -20,25 +22,29 @@ const CTA = () => {
             }}
           />
 
-          <div className="relative isolate pt-12 pb-0 md:pb-12">
+          <Reveal direction="left" delay={0.1} className=" isolate pt-12 pb-0 md:pb-12">
             <h2 className="font-medium text-4xl tracking-[-0.04em] lg:text-5xl/[1.2]">
               Accédez à vos sujets d'examen
             </h2>
             <p className="mt-2 text-muted-foreground text-xl tracking-[-0.015em] sm:mt-4 ">
               Accédez à vos sujets d'examen passés en quelques clics.
             </p>
-            <Button className="mt-5 sm:mt-10" size="lg">
-              Explorer les sujets <ArrowUpRight />
-            </Button>
-          </div>
-          <img
-            alt="mobile view of the app"
-            className="mask-b-from-75% relative isolate mt-auto max-w-xs md:h-75 md:w-auto md:max-w-none"
-            src="/mobile.png"
-          />
+            <Link to="/epreuves">
+              <Button className="mt-5 sm:mt-10" size="lg">
+                Explorer les sujets <ArrowUpRight />
+              </Button>
+            </Link>
+          </Reveal>
+          <Reveal direction="right" delay={0.2}>
+            <img
+              alt="mobile view of the app"
+              className="mask-b-from-75% relative isolate mt-auto max-w-xs md:h-75 md:w-auto md:max-w-none"
+              src="/mobile.png"
+            />
+          </Reveal>
         </div>
       </div>
-    </div>
+    </Reveal>
   );
 };
 

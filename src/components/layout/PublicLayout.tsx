@@ -1,8 +1,11 @@
 import { useState } from "react";
-import { Link, NavLink, Outlet } from "react-router-dom";
+import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { GraduationCap, FileText, LayoutGrid, Menu } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { PageTransition } from "@/components/motion";
+import { pageTransition } from "@/lib/motion";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -29,13 +32,20 @@ function navLinkClass(isActive: boolean, mobile = false) {
 
 export function PublicLayout() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const location = useLocation();
+  const reduceMotion = useReducedMotion();
 
   const closeMenu = () => setMenuOpen(false);
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
-      <header className="sticky top-0 z-40 border-b border-primary/10 bg-background/80 backdrop-blur-md">
-        <div className="container mx-auto flex h-14 items-center justify-between gap-3 px-4 sm:h-16 md:px-20">
+      <motion.header
+        initial={reduceMotion ? false : { y: -16, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={pageTransition}
+        className="fixed inset-x-4 z-40 top-6 mx-auto h-16 max-w-(--breakpoint-xl) rounded-full border bg-background shadow-sm"
+      >
+        <div className="mx-auto flex h-full items-center justify-between px-4">
           {/* Logo */}
           <Link
             to="/"
@@ -117,17 +127,27 @@ export function PublicLayout() {
             </Sheet>
           </div>
         </div>
-      </header>
+      </motion.header>
 
-      <main className="container mx-auto flex-1 px-4 md:px-30">
-        <Outlet />
+      <main className="container mx-auto flex-1">
+        <AnimatePresence mode="wait">
+          <PageTransition key={location.pathname}>
+            <Outlet />
+          </PageTransition>
+        </AnimatePresence>
       </main>
 
-      <footer className="border-t border-primary/10 py-6 text-center text-sm text-muted-foreground sm:py-8">
+      <motion.footer
+        initial={reduceMotion ? false : { opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        transition={pageTransition}
+        className="border-t border-primary/10 py-6 text-center text-sm text-muted-foreground sm:py-8"
+      >
         <p className="px-4">
           Plateforme de consultation des épreuves d'examens · Université
         </p>
-      </footer>
+      </motion.footer>
     </div>
   );
 }

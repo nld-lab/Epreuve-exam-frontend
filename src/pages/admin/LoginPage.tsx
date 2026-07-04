@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate, Navigate, Link } from "react-router-dom";
 import { toast } from "sonner";
-import { GraduationCap } from "lucide-react";
+import { ArrowLeft, GraduationCap } from "lucide-react";
 import { useAuth } from "@/context/auth-context";
 import { getErrorMessage } from "@/lib/api";
 import {
@@ -16,6 +16,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { Reveal } from "@/components/motion";
 
 export function LoginPage() {
   const { login, isAuthenticated, isLoading } = useAuth();
@@ -43,17 +44,20 @@ export function LoginPage() {
   };
 
   return (
-    <div className="relative flex min-h-screen items-center justify-center bg-muted/30 p-4">
+    <div className="relative flex min-h-screen items-center justify-center bg-foreground/10 p-4">
       <div className="absolute top-4 right-4">
         <ThemeToggle />
       </div>
-      <Card className="w-full max-w-sm">
+      <Reveal className="w-full max-w-sm" inView={false} direction="scale">
+      <Card className="w-full">
         <CardHeader className="text-center">
           <div className="mx-auto mb-2 flex size-12 items-center justify-center rounded-full bg-primary/10">
             <GraduationCap className="size-6 text-primary" />
           </div>
           <CardTitle className="text-xl">Espace administration</CardTitle>
-          <CardDescription>Connectez-vous pour gérer les épreuves</CardDescription>
+          <CardDescription>
+            Connectez-vous pour gérer les épreuves
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -85,13 +89,14 @@ export function LoginPage() {
               Se connecter
             </Button>
           </form>
-          <div className="mt-4 text-center">
-            <Link to="/" className="text-sm text-muted-foreground hover:underline">
-              ← Retour au site public
+          <div className="mt-4 text-center justify-center flex">
+            <Link to="/" className="text-sm  hover:underline flex items-center">
+              <ArrowLeft className="size-4 mr-2" /> Retour au site public
             </Link>
           </div>
         </CardContent>
       </Card>
+      </Reveal>
     </div>
   );
 }

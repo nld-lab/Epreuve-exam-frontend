@@ -87,6 +87,7 @@ export function EpreuvesAdminPage() {
                   <TableCell>{ep.filiere?.nom ?? "—"}</TableCell>
                   <TableCell>
                     <Badge
+                    className="text-white"
                       variant={ep.session === "RATTRAPAGE" ? "destructive" : "secondary"}
                     >
                       {ep.session === "RATTRAPAGE" ? "Rattrapage" : "Normale"}

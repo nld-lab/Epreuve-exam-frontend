@@ -16,6 +16,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Reveal, StaggerContainer, StaggerItem } from "@/components/motion";
 
 const ALL = "all";
 
@@ -23,8 +24,9 @@ export function EpreuvesPage() {
   const [searchParams] = useSearchParams();
   const initialFiliere = searchParams.get("filiereId");
   const initialPole = searchParams.get("poleId");
+  const initialQ = searchParams.get("q") ?? "";
 
-  const [q, setQ] = useState("");
+  const [q, setQ] = useState(initialQ);
   const [poleId, setPoleId] = useState<string>(initialPole ?? ALL);
   const [filiereId, setFiliereId] = useState<string>(initialFiliere ?? ALL);
   const [anneeId, setAnneeId] = useState<string>(ALL);
@@ -58,13 +60,16 @@ export function EpreuvesPage() {
   };
 
   return (
-    <div className="space-y-6">
-      <h1 className="text-2xl font-bold">Catalogue des épreuves</h1>
+    <div className="space-y-6 px-4 md:px-60 py-12">
+      <Reveal inView={false}>
+        <h1 className="text-2xl font-bold">Catalogue des épreuves</h1>
+      </Reveal>
 
       {/* Filtres */}
-      <Card>
+      <Reveal delay={0.08} inView={false}>
+      <Card className="bg-secondary">
         <CardContent className="grid gap-3 py-2 md:grid-cols-2 lg:grid-cols-5">
-          <div className="relative lg:col-span-1">
+          <div className="relative lg:col-span-1 bg-background rounded-lg">
             <Search className="absolute left-2.5 top-2.5 size-4 text-muted-foreground" />
             <Input
               placeholder="Rechercher..."
@@ -78,7 +83,7 @@ export function EpreuvesPage() {
             value={poleId}
             onValueChange={(v) => resetPageAnd(() => setPoleId(v))}
           >
-            <SelectTrigger className="w-full">
+            <SelectTrigger className="w-full bg-background rounded-lg">
               <SelectValue placeholder="Pôle" />
             </SelectTrigger>
             <SelectContent>
@@ -95,7 +100,7 @@ export function EpreuvesPage() {
             value={filiereId}
             onValueChange={(v) => resetPageAnd(() => setFiliereId(v))}
           >
-            <SelectTrigger className="w-full">
+            <SelectTrigger className="w-full bg-background rounded-lg">
               <SelectValue placeholder="Filière" />
             </SelectTrigger>
             <SelectContent>
@@ -112,7 +117,7 @@ export function EpreuvesPage() {
             value={anneeId}
             onValueChange={(v) => resetPageAnd(() => setAnneeId(v))}
           >
-            <SelectTrigger className="w-full">
+            <SelectTrigger className="w-full bg-background rounded-lg">
               <SelectValue placeholder="Année" />
             </SelectTrigger>
             <SelectContent>
@@ -129,7 +134,7 @@ export function EpreuvesPage() {
             value={session}
             onValueChange={(v) => resetPageAnd(() => setSession(v))}
           >
-            <SelectTrigger className="w-full">
+            <SelectTrigger className="w-full bg-background rounded-lg">
               <SelectValue placeholder="Session" />
             </SelectTrigger>
             <SelectContent>
@@ -140,6 +145,7 @@ export function EpreuvesPage() {
           </Select>
         </CardContent>
       </Card>
+      </Reveal>
 
       {/* Liste */}
       {isLoading ? (
@@ -153,18 +159,20 @@ export function EpreuvesPage() {
           Aucune épreuve ne correspond à ces critères.
         </p>
       ) : (
-        <div
+        <StaggerContainer
+          key={page}
           className={`grid gap-4 sm:grid-cols-2 lg:grid-cols-3 ${
             isFetching ? "opacity-60" : ""
           }`}
         >
           {epreuves.map((ep) => (
-            <Card key={ep.id} className="flex flex-col">
+            <StaggerItem key={ep.id}>
+            <Card className="flex h-full flex-col">
               <CardContent className="flex flex-1 flex-col gap-2">
                 <div className="flex items-start justify-between gap-2">
                   <h3 className="font-medium leading-snug">{ep.titre}</h3>
                   <Badge
-                    variant={ep.session === "RATTRAPAGE" ? "destructive" : "secondary"}
+                    variant={ep.session === "RATTRAPAGE" ? "destructive" : "outline"}
                   >
                     {ep.session === "RATTRAPAGE" ? "Rattrapage" : "Normale"}
                   </Badge>
@@ -195,13 +203,14 @@ export function EpreuvesPage() {
                 </div>
               </CardContent>
             </Card>
+            </StaggerItem>
           ))}
-        </div>
+        </StaggerContainer>
       )}
 
       {/* Pagination */}
       {meta && meta.totalPages > 1 && (
-        <div className="flex items-center justify-center gap-4">
+        <Reveal className="flex items-center justify-center gap-4">
           <Button
             variant="outline"
             size="sm"
@@ -221,7 +230,7 @@ export function EpreuvesPage() {
           >
             Suivant
           </Button>
-        </div>
+        </Reveal>
       )}
     </div>
   );

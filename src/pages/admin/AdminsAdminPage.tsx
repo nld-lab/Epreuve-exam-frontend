@@ -74,7 +74,7 @@ export function AdminsAdminPage() {
                   <TableCell className="font-medium">{a.nom}</TableCell>
                   <TableCell>{a.email}</TableCell>
                   <TableCell>
-                    <Badge variant={a.role === "SUPERADMIN" ? "default" : "secondary"}>
+                    <Badge variant="default">
                       {a.role}
                     </Badge>
                   </TableCell>
