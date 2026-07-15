@@ -69,7 +69,7 @@ export function AdminLayout() {
                   "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors",
                   isActive
                     ? "bg-primary text-primary-foreground dark:text-black"
-                    : "text-black dark:text-white hover:bg-secondary"
+                    : "text-black dark:text-white hover:bg-primary/10"
                 )
               }
             >

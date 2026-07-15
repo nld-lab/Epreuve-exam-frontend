@@ -1,75 +1,123 @@
-# React + TypeScript + Vite
+# Épreuves d'Examens — Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Interface web de consultation et de gestion des épreuves d'examens universitaires.
 
-Currently, two official plugins are available:
+Les étudiants parcourent, recherchent et téléchargent les sujets (PDF). Les administrateurs gèrent le contenu via un espace sécurisé.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+API associée : [Epreuve-exam-backend](../Epreuve-exam-backend).
 
-## React Compiler
+---
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Stack
 
-## Expanding the ESLint configuration
+| Technologie | Rôle |
+|---|---|
+| **React 19** + **TypeScript** | UI |
+| **Vite 8** | Build & serveur de dev |
+| **React Router 7** | Routing |
+| **TanStack Query** | Cache & appels API |
+| **Axios** | Client HTTP |
+| **Tailwind CSS 4** + **shadcn/ui** | Design system |
+| **Motion** | Animations |
+| **next-themes** | Thème clair / sombre |
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+---
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Prérequis
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+- Node.js 20+
+- Backend démarré (par défaut `http://localhost:4000`)
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+---
 
+## Installation
+
+```bash
+npm install
+cp .env.example .env
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Variables d'environnement
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+| Variable | Description | Exemple |
+|---|---|---|
+| `VITE_API_URL` | URL de base de l'API (avec `/api`) | `http://localhost:4000/api` |
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+---
+
+## Scripts
+
+```bash
+npm run dev       # Dev server → http://localhost:5173
+npm run build     # Build de production (tsc + vite)
+npm run preview   # Prévisualiser le build
+npm run lint      # ESLint
+```
+
+---
+
+## Fonctionnalités
+
+### Espace public
+
+- Accueil avec pôles et recherche
+- Navigation **Pôle → Filières → Épreuves**
+- Catalogue filtrable (pôle, filière, année, session, mot-clé)
+- Fiche détail + aperçu / téléchargement PDF
+- Interface responsive, thème clair / sombre
+
+### Espace administration (`/admin`)
+
+| Rôle | Droits |
+|---|---|
+| **Administrateur** | Épreuves de son pôle (création ; modification / suppression uniquement de ses propres publications) |
+| **SuperAdmin** | Pôles, filières, années, comptes admin, toutes les épreuves |
+
+Connexion : `/admin/login` (JWT stocké en `localStorage`).
+
+---
+
+## Structure du projet
 
 ```
+src/
+├── components/       # UI, layouts, formulaires, motion
+├── context/          # Auth (JWT, rôle)
+├── hooks/            # queries & mutations React Query
+├── lib/              # api (axios), queryClient, utils
+├── pages/
+│   ├── public/       # Accueil, pôles, catalogue, détail
+│   └── admin/        # Dashboard, CRUD
+└── types/            # Types TypeScript partagés
+```
+
+Alias d'import : `@/` → `src/`.
+
+---
+
+## Routes
+
+| Chemin | Description |
+|---|---|
+| `/` | Accueil |
+| `/poles/:poleId` | Filières d'un pôle |
+| `/epreuves` | Catalogue (filtres en query string) |
+| `/epreuves/:id` | Détail d'une épreuve |
+| `/admin/login` | Connexion |
+| `/admin` | Dashboard |
+| `/admin/epreuves` | Gestion des épreuves |
+| `/admin/poles` | Pôles *(SuperAdmin)* |
+| `/admin/filieres` | Filières *(SuperAdmin)* |
+| `/admin/annees` | Années d'étude *(SuperAdmin)* |
+| `/admin/admins` | Comptes admin *(SuperAdmin)* |
+
+---
+
+## Développement
+
+1. Lancer le backend (`npm run dev` dans `Epreuve-exam-backend`).
+2. Vérifier `VITE_API_URL` dans `.env`.
+3. Lancer le frontend : `npm run dev`.
+4. Ouvrir [http://localhost:5173](http://localhost:5173).
+
+Le CORS du backend doit autoriser `http://localhost:5173`.

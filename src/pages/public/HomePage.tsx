@@ -180,7 +180,7 @@ export function HomePage() {
           </p>
         </Reveal>
 
-        <StaggerContainer className="grid md:gap-10 gap-6 md:grid-cols-3">
+        <StaggerContainer inView className="grid md:gap-10 gap-6 md:grid-cols-3">
           {steps.map((step, i) => (
             <StaggerItem key={step.title}>
             <Card
@@ -238,7 +238,7 @@ export function HomePage() {
             ))}
           </div>
         ) : (
-          <StaggerContainer className="grid md:gap-6 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <StaggerContainer inView className="grid md:gap-6 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {poles?.map((pole) => (
               <StaggerItem key={pole.id}>
               <Link to={`/poles/${pole.id}`} className="group block h-full">

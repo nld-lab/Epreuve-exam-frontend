@@ -14,7 +14,7 @@ export function PoleFilieresPage() {
   const pole = poles?.find((p) => p.id === id);
 
   return (
-    <div className="space-y-6 px-4 md:px-60 py-12">
+    <div className="space-y-6 px-4 md:max-w-6xl mx-auto pt-30">
       <Reveal inView={false}>
       <Button asChild variant="ghost" size="sm">
         <Link to="/">
@@ -33,7 +33,7 @@ export function PoleFilieresPage() {
       </div>
       </Reveal>
 
-      <Reveal delay={0.12}>
+      <Reveal inView={false} delay={0.12}>
       <h2 className="text-lg font-semibold flex items-center gap-2">
         <FolderTree className="size-5" />
         Filières

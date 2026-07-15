@@ -42,7 +42,7 @@ export function EpreuveDetailPage() {
   } = useEpreuve(id ? Number(id) : undefined);
 
   return (
-    <div className="space-y-6 max-w-2xl mx-auto py-12 px-4">
+    <div className="space-y-6 md:max-w-3xl mx-auto pt-30 px-4">
       <Reveal inView={false} delay={0.05}>
         <Button asChild variant="ghost" size="sm">
           <Link to="/epreuves">

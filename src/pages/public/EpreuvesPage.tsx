@@ -60,7 +60,7 @@ export function EpreuvesPage() {
   };
 
   return (
-    <div className="space-y-6 px-4 md:px-60 py-12">
+    <div className="space-y-6 px-4 md:max-w-6xl mx-auto pt-30">
       <Reveal inView={false}>
         <h1 className="text-2xl font-bold">Catalogue des épreuves</h1>
       </Reveal>
@@ -210,7 +210,7 @@ export function EpreuvesPage() {
 
       {/* Pagination */}
       {meta && meta.totalPages > 1 && (
-        <Reveal className="flex items-center justify-center gap-4">
+        <Reveal inView={false} className="flex items-center justify-center gap-4">
           <Button
             variant="outline"
             size="sm"

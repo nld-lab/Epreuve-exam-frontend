@@ -101,23 +101,45 @@ export function Reveal({
   );
 }
 
+type StaggerContainerProps = MotionDivProps & {
+  /** Si true, anime au scroll. Defaut false : anime au mount (fiable pour les listes async). */
+  inView?: boolean;
+};
+
 export function StaggerContainer({
   children,
   className,
+  inView = false,
   ...props
-}: MotionDivProps) {
+}: StaggerContainerProps) {
   const reduceMotion = useReducedMotion();
 
   if (reduceMotion) {
     return <div className={className}>{children}</div>;
   }
 
+  // whileInView + donnees async = risque d'elements bloques a opacity: 0
+  // si l'IntersectionObserver rate le mount. Preferer animate au mount.
+  if (inView) {
+    return (
+      <motion.div
+        className={className}
+        initial="hidden"
+        whileInView="visible"
+        viewport={viewportOnce}
+        variants={staggerContainer}
+        {...props}
+      >
+        {children}
+      </motion.div>
+    );
+  }
+
   return (
     <motion.div
       className={className}
       initial="hidden"
-      whileInView="visible"
-      viewport={viewportOnce}
+      animate="visible"
       variants={staggerContainer}
       {...props}
     >

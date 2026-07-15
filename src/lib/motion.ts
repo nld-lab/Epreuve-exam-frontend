@@ -12,7 +12,9 @@ export const pageTransition = {
 
 export const viewportOnce = {
   once: true,
-  margin: "-60px 0px",
+  // Marge positive : l'animation se declenche un peu avant d'entrer
+  // dans le viewport (evite les elements bloques a opacity: 0).
+  margin: "0px 0px -40px 0px",
 } as const;
 
 export const fadeUp = {
