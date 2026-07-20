@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
+import { useRef, useState } from "react";
+import { Link, NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { GraduationCap, FileText, LayoutGrid, Menu } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -14,11 +14,14 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { useAuth } from "@/context/auth-context";
 
 const navItems = [
   { to: "/", label: "Accueil", icon: LayoutGrid, end: true },
   { to: "/epreuves", label: "Épreuves", icon: FileText, end: false },
 ];
+
+const LOGO_CLICK_WINDOW_MS = 500;
 
 function navLinkClass(isActive: boolean, mobile = false) {
   return cn(
@@ -33,9 +36,35 @@ function navLinkClass(isActive: boolean, mobile = false) {
 export function PublicLayout() {
   const [menuOpen, setMenuOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
   const reduceMotion = useReducedMotion();
+  const logoClicksRef = useRef(0);
+  const logoClickTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const closeMenu = () => setMenuOpen(false);
+
+  const handleLogoClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    logoClicksRef.current += 1;
+
+    if (logoClickTimerRef.current) {
+      clearTimeout(logoClickTimerRef.current);
+    }
+
+    if (logoClicksRef.current >= 3) {
+      e.preventDefault();
+      logoClicksRef.current = 0;
+      closeMenu();
+      navigate(isAuthenticated ? "/admin" : "/admin/login");
+      return;
+    }
+
+    logoClickTimerRef.current = setTimeout(() => {
+      logoClicksRef.current = 0;
+    }, LOGO_CLICK_WINDOW_MS);
+
+    closeMenu();
+  };
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
@@ -46,11 +75,11 @@ export function PublicLayout() {
         className="fixed inset-x-4 z-40 top-6 mx-auto h-16 max-w-(--breakpoint-xl) rounded-full border bg-background shadow-sm"
       >
         <div className="mx-auto flex h-full items-center justify-between px-4">
-          {/* Logo */}
+          {/* Logo — triple-clic ouvre la connexion / le panneau admin */}
           <Link
             to="/"
             className="flex min-w-0 shrink items-center gap-2 font-semibold"
-            onClick={closeMenu}
+            onClick={handleLogoClick}
           >
             <GraduationCap className="size-6 shrink-0 text-primary" />
             <span className="truncate sm:hidden">Examens</span>
@@ -72,12 +101,6 @@ export function PublicLayout() {
                 {item.label}
               </NavLink>
             ))}
-            <Link
-              to="/admin/login"
-              className="ml-2 rounded-md border border-primary/20 px-3 py-2 text-sm font-medium text-primary transition-colors hover:bg-primary/5"
-            >
-              Administration
-            </Link>
             <ThemeToggle />
           </nav>
 
@@ -115,13 +138,6 @@ export function PublicLayout() {
                       {item.label}
                     </NavLink>
                   ))}
-                  <Link
-                    to="/admin/login"
-                    onClick={closeMenu}
-                    className="mt-2 flex items-center justify-center rounded-md border border-primary/20 px-3 py-3 text-base font-medium text-primary transition-colors hover:bg-primary/5"
-                  >
-                    Administration
-                  </Link>
                 </nav>
               </SheetContent>
             </Sheet>
