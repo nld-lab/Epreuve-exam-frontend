@@ -77,7 +77,7 @@ export function EpreuveFormDialog({ trigger, epreuve }: EpreuveFormDialogProps) 
       return;
     }
     if (!isEdit && !fichier) {
-      toast.error("Le fichier PDF est obligatoire");
+      toast.error("Le fichier PDF ou DOCX est obligatoire");
       return;
     }
 
@@ -117,7 +117,7 @@ export function EpreuveFormDialog({ trigger, epreuve }: EpreuveFormDialogProps) 
         <DialogHeader>
           <DialogTitle>{isEdit ? "Modifier l'épreuve" : "Nouvelle épreuve"}</DialogTitle>
           <DialogDescription>
-            Renseignez les informations et joignez le sujet au format PDF.
+            Renseignez les informations et joignez le sujet au format PDF ou DOCX.
           </DialogDescription>
         </DialogHeader>
 
@@ -246,12 +246,13 @@ export function EpreuveFormDialog({ trigger, epreuve }: EpreuveFormDialogProps) 
 
           <div className="space-y-1.5">
             <Label htmlFor="fichier">
-              Fichier PDF {isEdit && "(laisser vide pour conserver l'actuel)"}
+              Fichier PDF ou DOCX{" "}
+              {isEdit && "(laisser vide pour conserver l'actuel)"}
             </Label>
             <Input
               id="fichier"
               type="file"
-              accept="application/pdf"
+              accept="application/pdf,.docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
               onChange={(e) => setFichier(e.target.files?.[0] ?? null)}
             />
           </div>

@@ -4,12 +4,21 @@ export const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:4000/ap
 /** Origine du backend sans le prefixe /api (ex: http://localhost:4000). */
 export const API_ORIGIN = API_URL.replace(/\/api\/?$/, "");
 
-/** URL pour afficher le PDF dans le navigateur (apercu inline). */
+/** URL pour afficher le fichier dans le navigateur (apercu inline, PDF uniquement). */
 export function getEpreuvePreviewUrl(fichierUrl: string): string {
   if (fichierUrl.startsWith("http://") || fichierUrl.startsWith("https://")) {
     return fichierUrl;
   }
   return `${API_ORIGIN}${fichierUrl.startsWith("/") ? fichierUrl : `/${fichierUrl}`}`;
+}
+
+/** Indique si le fichier d'epreuve est un DOCX (non visualisable en apercu navigateur). */
+export function isDocxEpreuveFile(
+  fichierUrl?: string | null,
+  fichierNom?: string | null
+): boolean {
+  const candidates = [fichierNom, fichierUrl].filter(Boolean) as string[];
+  return candidates.some((value) => value.toLowerCase().endsWith(".docx"));
 }
 const TOKEN_KEY = "epreuves.token";
 

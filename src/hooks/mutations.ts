@@ -180,7 +180,7 @@ export function useDeleteAdmin() {
   });
 }
 
-// --- Epreuves (multipart/form-data avec PDF) ---
+// --- Epreuves (multipart/form-data avec PDF ou DOCX) ---
 
 export interface EpreuveInput {
   titre: string;

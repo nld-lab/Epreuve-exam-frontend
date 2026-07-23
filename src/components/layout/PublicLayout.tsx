@@ -72,7 +72,7 @@ export function PublicLayout() {
         initial={reduceMotion ? false : { y: -16, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={pageTransition}
-        className="fixed inset-x-4 z-40 top-6 mx-auto h-16 max-w-(--breakpoint-xl) rounded-full border bg-background shadow-sm"
+        className="fixed inset-x-0 z-40 top-6 mx-auto h-16 max-w-(--breakpoint-xl) rounded-full border bg-background shadow-sm"
       >
         <div className="mx-auto flex h-full items-center justify-between px-4">
           {/* Logo — triple-clic ouvre la connexion / le panneau admin */}

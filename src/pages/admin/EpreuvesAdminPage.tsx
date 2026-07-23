@@ -41,7 +41,7 @@ export function EpreuvesAdminPage() {
     <div className="space-y-6">
       <PageHeader
         title="Épreuves"
-        description="Ajoutez et gérez vos épreuves (upload PDF)"
+        description="Ajoutez et gérez vos épreuves (upload PDF ou DOCX)"
         action={
           <EpreuveFormDialog
             trigger={

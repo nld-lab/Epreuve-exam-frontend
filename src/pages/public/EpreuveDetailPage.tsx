@@ -7,13 +7,19 @@ import {
   BookOpen,
   FolderTree,
 } from "lucide-react";
-import { API_URL, getEpreuvePreviewUrl } from "@/lib/api";
+import { API_URL, getEpreuvePreviewUrl, isDocxEpreuveFile } from "@/lib/api";
 import { useEpreuve } from "@/hooks/queries";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Reveal } from "@/components/motion";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 function InfoRow({
   icon: Icon,
@@ -93,20 +99,44 @@ export function EpreuveDetailPage() {
               {/* <InfoRow icon={User} label="Publié par" value={ep.publiePar?.nom} /> */}
 
               <div className="mt-4 flex flex-col gap-4 md:gap-2 sm:flex-row">
-                <Button
-                  asChild
-                  variant="outline"
-                  className="flex-1 py-2 md:py-0"
-                >
-                  <a
-                    href={getEpreuvePreviewUrl(ep.fichierUrl)}
-                    target="_blank"
-                    rel="noreferrer"
+                {isDocxEpreuveFile(ep.fichierUrl, ep.fichierNom) ? (
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <span className="flex-1">
+                          <Button
+                            type="button"
+                            variant="outline"
+                            className="w-full py-2 md:py-0"
+                            disabled
+                          >
+                            <Eye className="size-4" />
+                            Aperçu indisponible
+                          </Button>
+                        </span>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        L&apos;aperçu navigateur n&apos;est pas disponible pour
+                        les fichiers DOCX.
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                ) : (
+                  <Button
+                    asChild
+                    variant="outline"
+                    className="flex-1 py-2 md:py-0"
                   >
-                    <Eye className="size-4" />
-                    Aperçu du PDF
-                  </a>
-                </Button>
+                    <a
+                      href={getEpreuvePreviewUrl(ep.fichierUrl)}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      <Eye className="size-4" />
+                      Aperçu du PDF
+                    </a>
+                  </Button>
+                )}
                 <Button asChild className="flex-1 py-2 md:py-0">
                   <a
                     href={`${API_URL}/public/epreuves/${ep.id}/download`}

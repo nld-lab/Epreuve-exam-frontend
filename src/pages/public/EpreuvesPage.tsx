@@ -197,7 +197,7 @@ export function EpreuvesPage() {
                       rel="noreferrer"
                     >
                       <Download className="size-4" />
-                      PDF
+                      Télécharger
                     </a>
                   </Button>
                 </div>
